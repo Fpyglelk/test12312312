@@ -1,0 +1,177 @@
+using System.Diagnostics;
+using System.Linq;
+using System.Net;
+using System.Reflection;
+using System.Text;
+using System.Threading;
+using System.Windows.Forms;
+
+namespace FuckBitskins
+{
+  public class FuckBitskins
+  {
+    private static void Main(string[] args)
+    {
+      Console.Title = "Console | Fuck Bitskins";
+      bool flag1 = false;
+      bool flag2 = false;
+      bool flag3 = false;
+      int num1 = -1;
+      string str1 = "-1";
+      string str2 = "";
+      string source = "";
+      string[] strArray1 = new string[0];
+      string[] strArray2 = new string[0];
+      WebClient webClient = new WebClient();
+      if (args.Length == 2)
+      {
+        flag1 = Convert.ToBoolean(args[0]);
+        str2 = args[1];
+        Console.WriteLine("Enter API-Key: " + str2);
+      }
+      if (!flag1)
+      {
+        Console.Write("Enter API-Key: ");
+        str2 = Console.ReadLine().ToString();
+        if (str2.Length != 36)
+        {
+          Console.WriteLine("Error. API-Key is invalid.");
+          flag2 = true;
+        }
+      }
+      if (!flag2)
+      {
+        Console.Write("Enter Authy-Key: ");
+        source = Console.ReadLine().ToString();
+        if (source.Length != 6 || !source.All<char>(new Func<char, bool>(char.IsDigit)))
+        {
+          Console.WriteLine("Error. Authy-Key is invalid.");
+          flag3 = true;
+        }
+      }
+      if (flag2 | flag3)
+      {
+        if (MessageBox.Show("The key you entered is inccorect." + Environment.NewLine + "Try again?", "Incorrect Information", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+        {
+          if (!flag2)
+            Process.Start(Assembly.GetEntryAssembly().Location, "true " + str2);
+          else
+            Process.Start(Assembly.GetEntryAssembly().Location);
+        }
+        Environment.Exit(1);
+      }
+      else
+      {
+        while (num1 < 0 || num1 > 100)
+        {
+          Console.Write("Percent to snipe? (Example 75 = buy skin listed at 75% of skin market value, 60% or lower recommended): ");
+          str1 = Console.ReadLine().ToString();
+          if (str1.All<char>(new Func<char, bool>(char.IsDigit)))
+            num1 = int.Parse(str1);
+          else
+            Console.WriteLine("Invalid input.");
+        }
+      }
+      Console.Clear();
+      string[] strArray3 = new string[0];
+      try
+      {
+        strArray3 = Encoding.UTF8.GetString(webClient.DownloadData("https://bitskins.com/api/v1/get_account_balance/?api_key=" + str2 + "&code=" + source)).Split('"');
+      }
+      catch
+      {
+        Console.WriteLine("Bad API-Key or Authy-Key.");
+        Thread.Sleep(10000);
+        Environment.Exit(1);
+      }
+      if (strArray3[3].Equals("fail"))
+      {
+        int num2 = (int) MessageBox.Show("Bad API-Key or Authy-Key.");
+        Environment.Exit(1);
+      }
+      if (strArray3[3].Equals("success"))
+      {
+        Console.WriteLine("Your current balance is: " + strArray3[9]);
+        Console.WriteLine("========================================");
+        Console.WriteLine("Attempting to snipe skins under price " + strArray3[9] + " at " + str1 + "% market value.");
+        Thread.Sleep(1500);
+        try
+        {
+          strArray1 = Encoding.UTF8.GetString(webClient.DownloadData("http://pastebin.com/raw/E57Lc6aj")).Split(',');
+          strArray2 = Encoding.UTF8.GetString(webClient.DownloadData("http://pastebin.com/raw/eMG8R8VL")).Split(',');
+        }
+        catch
+        {
+          Console.WriteLine("Unknown Error.");
+          Thread.Sleep(10000);
+          Environment.Exit(1);
+        }
+        if (strArray1.Length == strArray2.Length)
+        {
+          for (int index = 0; index < strArray1.Length; ++index)
+          {
+            try
+            {
+              Console.Clear();
+              if (index % 3 == 0)
+              {
+                Console.WriteLine("Your current balance is: " + strArray3[9]);
+                Console.WriteLine("========================================");
+                Console.WriteLine("Attempting to snipe skins.");
+              }
+              else if (index % 3 == 1)
+              {
+                Console.WriteLine("Your current balance is: " + strArray3[9]);
+                Console.WriteLine("========================================");
+                Console.WriteLine("Attempting to snipe skins..");
+              }
+              else
+              {
+                Console.WriteLine("Your current balance is: " + strArray3[9]);
+                Console.WriteLine("========================================");
+                Console.WriteLine("Attempting to snipe skins...");
+              }
+              strArray3 = Encoding.UTF8.GetString(webClient.DownloadData("https://bitskins.com/api/v1/buy_item/?api_key=" + str2 + "&code=" + source + "&item_ids=" + strArray1[index] + "&prices=" + strArray2[index + 1])).Split('"');
+              Thread.Sleep(130);
+            }
+            catch
+            {
+              Thread.Sleep(130);
+            }
+          }
+        }
+        Thread.Sleep(1000);
+        try
+        {
+          strArray3 = Encoding.UTF8.GetString(webClient.DownloadData("https://bitskins.com/api/v1/get_account_balance/?api_key=" + str2 + "&code=" + source)).Split('"');
+        }
+        catch
+        {
+          Console.WriteLine("Authy-Key expired. Exitting.");
+          Thread.Sleep(10000);
+          Environment.Exit(1);
+        }
+      }
+      Thread.Sleep(1000);
+      Console.Clear();
+      for (int index = 0; index > -1; ++index)
+      {
+        Console.WriteLine("Your current balance is: " + strArray3[9]);
+        Console.WriteLine("========================================");
+        Console.WriteLine("Attempting to snipe skins.   (you will hear a ding when a skin is found)");
+        Thread.Sleep(1000);
+        Console.Clear();
+        Console.WriteLine("Your current balance is: " + strArray3[9]);
+        Console.WriteLine("========================================");
+        Console.WriteLine("Attempting to snipe skins..  (you will hear a ding when a skin is found)");
+        Thread.Sleep(1000);
+        Console.Clear();
+        Console.WriteLine("Your current balance is: " + strArray3[9]);
+        Console.WriteLine("========================================");
+        Console.WriteLine("Attempting to snipe skins... (you will hear a ding when a skin is found)");
+        Thread.Sleep(1000);
+        Console.Clear();
+      }
+    }
+  }
+}
