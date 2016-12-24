@@ -7,13 +7,13 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace FuckBitskins
+namespace BitskinsBot
 {
-  public class FuckBitskins
+  public class BitskinsBot
   {
     private static void Main(string[] args)
     {
-      Console.Title = "Console | Fuck Bitskins";
+      Console.Title = "Console | Bitskins Bot";
       bool flag1 = false;
       bool flag2 = false;
       bool flag3 = false;
